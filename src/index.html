@@ -5,9 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page title</title>
     <link rel="stylesheet" href="./sass/index.scss" />
+    <link rel="stylesheet" href="styles.css">
     <script type="module" src="./index.js"></script>
   </head>
   <body>
-    
+                     <!--Searching form--> 
+
+     <form class="search-form" id="search-form">
+      <input type="text"
+       name="searchQuery"
+        autocomplete="off"
+         placeholder="Search images..." />
+      <button type="submit">Search</button>
+     </form>
+
+    <div class="container">
+     <div class="gallery_images">
+        <!--Cards with images-->
+     </div>
+     <button type="button" class="load-more is-hidden">Load more</button>
+    </div>
   </body>
 </html>
