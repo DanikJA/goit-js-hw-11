@@ -9,11 +9,12 @@ const galleryImg = document.querySelector('.gallery_images');
 const btnLoadMore = document.querySelector('.load-more');
                                        
 form.addEventListener('submit',onSubmitForm );
-                                           
+    
+
 
 async function onSubmitForm(event) {
     event.preventDefault();
-    const query = event.target.elements.searchQuery.value;
+    const query = event.target.searchQuery.value;
     
     if (!query) {
         Notiflix.Notify.warning('Please enter a search query!');
@@ -22,7 +23,7 @@ async function onSubmitForm(event) {
   
     try {
         const data = await fnFetch(query);
-        render(data);
+        render(data)
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`)
     } catch (error) {
         Notiflix.Notify.failure('Oops, something went wrong.');
@@ -51,16 +52,16 @@ async function onSubmitForm(event) {
 
 function render(images) {
     const murkup = images.hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
-        `<div class="photo-card">
-       <a href="${largeImageURL}">
-          <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+ `<div class="photo-card">
+        <a href="${largeImageURL}">
+          <img src="${webformatURL}" alt="${tags}" width="400"  />
         </a>
-     <div class="info">
-    <p class="info-item"> <b>Likes</b>${likes}</p>
-    <p class="info-item"><b>Views</b>${views}</p>
-    <p class="info-item"><b>Comments</b>${comments}</p>
-    <p class="info-item"><b>Downloads</b>${downloads}</p>
-    </div>
+      <div class="info">
+        <p class="info-item"> <b>Likes:</b>${likes}</p>
+        <p class="info-item"><b>Views:</b>${views}</p>
+        <p class="info-item"><b>Comments:</b>${comments}</p>
+        <p class="info-item"><b>Downloads:</b>${downloads}</p>
+      </div>
     </div>`
     ).join('');
     galleryImg.innerHTML = murkup;
