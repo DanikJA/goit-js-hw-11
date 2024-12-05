@@ -8,32 +8,64 @@ const form = document.getElementById('search-form');
 const galleryImg = document.querySelector('.gallery_images');
 const btnLoadMore = document.querySelector('.load-more');
                                        
+let page = 1;
+ galleryImg.innerHTML = '';
+let query = '';
+
 form.addEventListener('submit',onSubmitForm );
-    
+btnLoadMore.addEventListener('click', onLoadMoreClick);
 
 
 async function onSubmitForm(event) {
     event.preventDefault();
-    const query = event.target.searchQuery.value;
+     query = event.target.searchQuery.value;
     
     if (!query) {
         Notiflix.Notify.warning('Please enter a search query!');
         return;
     }
-  
+    page = 1;
+    
     try {
-        const data = await fnFetch(query);
+        const data = await fnFetch(query, page);
         render(data)
-        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`)
+        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+
+         if (data.hits.length < 40) {
+             btnLoadMore.style.display = 'none';
+              
+    } else {
+            btnLoadMore.style.display = 'block';
+        }
     } catch (error) {
         Notiflix.Notify.failure('Oops, something went wrong.');
         console.error(error)
     }
+
+   
 }  
 
 
+async function onLoadMoreClick() {
+    page += 1; // Збільшуємо номер сторінки
+    try {
+        const data = await fnFetch(query, page); // Отримуємо нові дані
 
- async function fnFetch(query){
+        if (data.hits.length < 40 || galleryImg.children.length >= data.totalHits) {
+            btnLoadMore.classList.add('is-hidden'); // Якщо більше зображень немає
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        } else {
+            render(data); // Додаємо нові зображення в галерею
+        }
+    } catch (error) {
+        Notiflix.Notify.failure('Oops, something went wrong.');
+        console.error(error);
+    }
+}
+
+
+
+ async function fnFetch(query, page){
 
      const params = {
          key: API_KEY,
@@ -64,7 +96,7 @@ function render(images) {
       </div>
     </div>`
     ).join('');
-    galleryImg.innerHTML = murkup;
+    galleryImg.insertAdjacentHTML('beforeend', murkup);
 }
 
 
