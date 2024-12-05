@@ -11,7 +11,6 @@ const galleryImg = document.querySelector('.gallery_images');
 const btnLoadMore = document.querySelector('.load-more');
                                        
 let page = 1;
- galleryImg.innerHTML = '';
 let query = '';
 
 form.addEventListener('submit',onSubmitForm );
@@ -32,6 +31,8 @@ async function onSubmitForm(event) {
         return;
     }
     page = 1;
+     galleryImg.innerHTML = '';
+
     
     try {
         const data = await fnFetch(query, page);
