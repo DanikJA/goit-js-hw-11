@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Notiflix from 'notiflix';
-
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
@@ -9,9 +8,10 @@ const BASE_URL = 'https://pixabay.com/api/';
 const form = document.getElementById('search-form');
 const galleryImg = document.querySelector('.gallery_images');
 const btnLoadMore = document.querySelector('.load-more');
-                                       
+
 let page = 1;
 let query = '';
+let totalHits = 0; // Загальна кількість зображень
 let lightbox;
 
 form.addEventListener('submit', onSubmitForm);
@@ -25,18 +25,22 @@ async function onSubmitForm(event) {
         Notiflix.Notify.warning('Please enter a search query!');
         return;
     }
-    page = 1;
-    galleryImg.innerHTML = '';
+
+    page = 1; // скидаємо сторінку на початок
+    galleryImg.innerHTML = ''; // очищаємо галерею
+    totalHits = 0; // скидаємо загальну кількість зображень
 
     try {
         const data = await fnFetch(query, page);
+        totalHits = data.totalHits; // встановлюємо загальну кількість зображень
         render(data);
-        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
-        if (data.hits.length < 40) {
-            btnLoadMore.style.display = 'none';
+        // Сховати кнопку, якщо зображень менше або рівно 40
+        if (totalHits <= 40) {
+            btnLoadMore.classList.add('is-hidden');
         } else {
-            btnLoadMore.style.display = 'block';
+            btnLoadMore.classList.remove('is-hidden');
         }
     } catch (error) {
         Notiflix.Notify.failure('Oops, something went wrong.');
@@ -45,22 +49,25 @@ async function onSubmitForm(event) {
 }
 
 async function onLoadMoreClick() {
-    page += 1; // Збільшуємо номер сторінки
+    page += 1; // збільшуємо номер сторінки
     try {
-        const data = await fnFetch(query, page); // Отримуємо нові дані
+        const data = await fnFetch(query, page);
+        const totalImagesLoaded = galleryImg.children.length; // кількість завантажених зображень
 
-        if (data.hits.length < 40 || galleryImg.children.length >= data.totalHits) {
-            btnLoadMore.classList.add('is-hidden'); // Якщо більше зображень немає
+        console.log(`totalImagesLoaded: ${totalImagesLoaded}, totalHits: ${totalHits}`);
+
+        // Перевіряємо, чи завантажено всі зображення
+        if (totalImagesLoaded >= totalHits) {
+            btnLoadMore.classList.add('is-hidden'); // сховати кнопку, якщо всі зображення завантажено
             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         } else {
             render(data);
-             lightbox.refresh();
+            lightbox.refresh(); // оновлюємо lightbox після додавання нових зображень
         }
     } catch (error) {
         Notiflix.Notify.failure('Oops, something went wrong.');
         console.error(error);
     }
-
 }
 
 async function fnFetch(query, page) {
@@ -71,6 +78,7 @@ async function fnFetch(query, page) {
         orientation: 'horizontal',
         safesearch: true,
         per_page: 40,
+        page: page, // додаємо параметр сторінки
     };
 
     const response = await axios.get(BASE_URL, { params });
@@ -92,39 +100,21 @@ function render(images) {
         </div>`
     ).join('');
     galleryImg.insertAdjacentHTML('beforeend', murkup);
-    
+
     // Перевіряємо, чи не ініціалізовано lightbox
     if (!lightbox) {
         initLightBox();
     } else {
-        lightbox.refresh();  // Оновлюємо lightbox, якщо він вже ініціалізований
+        lightbox.refresh(); // оновлюємо lightbox, якщо він вже ініціалізований
     }
 }
 
 function initLightBox() {
-    // Ініціалізація lightbox
     lightbox = new SimpleLightbox('.gallery_images a', {
         captionsData: 'alt',
         captionDelay: 250
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
