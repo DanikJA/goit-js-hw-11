@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Notiflix from 'notiflix';
 
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const API_KEY = '47324612-8ceed49284fd3133cd5b6cb67';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -14,6 +16,11 @@ let query = '';
 
 form.addEventListener('submit',onSubmitForm );
 btnLoadMore.addEventListener('click', onLoadMoreClick);
+
+let lightbox = new SimpleLightbox('.gallery_images a', {
+  captionsData: 'alt',
+  captionDelay: 250  
+})
 
 
 async function onSubmitForm(event) {
@@ -97,6 +104,8 @@ function render(images) {
     </div>`
     ).join('');
     galleryImg.insertAdjacentHTML('beforeend', murkup);
+
+     lightbox.refresh();
 }
 
 
