@@ -9,10 +9,98 @@ const form = document.getElementById('search-form');
 const galleryImg = document.querySelector('.gallery_images');
 const btnLoadMore = document.querySelector('.load-more');
 
-let page = 1;
+let page = 0;
 let query = '';
 let totalHits = 0; // Загальна кількість зображень
 let lightbox;
+
+
+// 1.Ставимо слухач.
+// 2.При сабміні ми отримуємо інформацію.
+// 3.створюємо посилання для виклику до бекенду.
+// 4.За допомогою html створюємо розмітку та рендеримо фото з бекенду.
+
+
+// form.addEventListener('submit', onSubmitForm);
+// btnLoadMore.addEventListener('click', onClickLoadMore);
+
+
+// async function onSubmitForm(event) {
+//     event.preventDefault();
+//     query = event.target.searchQuery.value;
+
+//     if (!query) {
+//         Notiflix.Notify.warning('Please enter a search query!');
+//         return;
+//     }
+    
+//     page = 1;
+//     galleryImg.innerHTML = '';
+//     totalHits = 0;
+
+//     try {
+//         const getData = await fnFetch(query, page);
+//         totalHits = getData.totalHits;
+//         render(getData); 
+//         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+
+//         if (totalHits <= 40) {
+//             btnLoadMore.classList.add('is-hidden');
+//         } else {
+//             btnLoadMore.classList.remove('is-hidden');
+//         }
+//     }catch(error) {
+//          Notiflix.Notify.failure('Oops, something went wrong.');
+//          console.error(error);
+//     }
+        
+// }
+
+
+// async function fnFetch() {
+//     params = {
+//         key: API_KEY,
+//         q: query,
+//         image_type: 'photo',
+//         orientation: 'horizontal',
+//         safesearch: true,
+//         per_page: 40,
+//     }
+ 
+//     const response = await axios.get(BASE_URL, { params });
+//     return response.data;
+// }
+
+
+// function render(images) {
+//     const murkup = images.hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
+//         `<div class="photo-card">
+//     <a href="${largeImageURL}">
+//   <img src="${webformatURL}" alt="${tags}" loading="lazy" width="400" />
+//    </a>  
+//   <div class="info">
+//     <p class="info-item">
+//       <b>likes</b>
+//       ${likes}
+//     </p>
+//     <p class="info-item">
+//       <b>views</b>
+//       ${views}
+//     </p>
+//     <p class="info-item">
+//       <b>comments</b>
+//       ${comments}
+//     </p>
+//     <p class="info-item">
+//       <b>downloads</b>
+//       ${downloads}
+//     </p>
+//   </div>
+// </div>`
+//     ).join('');
+//     galleryImg.insertAdjacentHTML('beforeend', murkup);
+// }
+
 
 form.addEventListener('submit', onSubmitForm);
 btnLoadMore.addEventListener('click', onLoadMoreClick);
@@ -133,38 +221,3 @@ function initLightBox() {
 
 
 
-// 1.Ставимо слухач.
-// 2.При сабміні ми отримуємо інформацію.
-// 3.створюємо посилання для виклику до бекенду.
-// 4.За допомогою html створюємо розмітку та рендеримо фото з бекенду.
-
-// const searchForm = document.getElementById('search-form');
-// const gallery = document.querySelector('gallery_images');
-// const loadMore = document.querySelector('load-more');
-
-
-
-// searchForm.addEventListener('submit', onSubmit);
-
-
-// async function onSubmit(event) {
-//     event.preventDefault();
-//     query = event.target.searchQuery.value;
-   
-//     if (!query) {
-//             Notiflix.Notify.warning('Please enter a search query!');
-//         return;
-        
-
-    // try {
-        
-    //    }
-    // } catch (error) {
-
-//      };
-// };
-
-
-// async function(fnFetch) {
-    
-// }
