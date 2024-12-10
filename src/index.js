@@ -112,6 +112,7 @@ function render(images) {
       const totalImagesLoaded = galleryImg.children.length;
     if (totalImagesLoaded >= totalHits) {
         btnLoadMore.classList.add('is-hidden');   
+         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
      }
 }
 
