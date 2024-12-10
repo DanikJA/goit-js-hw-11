@@ -14,7 +14,6 @@ let query = '';
 let totalHits = 0; // Загальна кількість зображень
 let lightbox;
 
-
 form.addEventListener('submit', onSubmitForm);
 btnLoadMore.addEventListener('click', onLoadMoreClick);
 
@@ -31,7 +30,6 @@ async function onSubmitForm(event) {
     galleryImg.innerHTML = ''; // очищаємо галерею
     totalHits = 0; // скидаємо загальну кількість зображень
 
-    btnLoadMore.classList.add('is-hidden');
 
     try {
         const data = await fnFetch(query, page);
@@ -50,14 +48,13 @@ async function onSubmitForm(event) {
         console.error(error);
     }
 }
-
+ 
 async function onLoadMoreClick() {
     page += 1; // збільшуємо номер сторінки
     try {
         const data = await fnFetch(query, page);
-        const totalImagesLoaded = galleryImg.children.length; // кількість завантажених зображень
 
-        console.log(`totalImagesLoaded: ${totalImagesLoaded}, totalHits: ${totalHits}`);
+       const totalImagesLoaded = galleryImg.children.length; // кількість завантажених зображень
 
         // Перевіряємо, чи завантажено всі зображення
         if (totalImagesLoaded >= totalHits) {
@@ -110,7 +107,12 @@ function render(images) {
     } else {
         lightbox.refresh(); // оновлюємо lightbox, якщо він вже ініціалізований
     }
+    const totalImagesLoaded = galleryImg.children.length;
+    if (totalImagesLoaded >= totalHits) {
+        btnLoadMore.classList.add('is-hidden');   
+     }
 }
+
 
 function initLightBox() {
     lightbox = new SimpleLightbox('.gallery_images a', {
